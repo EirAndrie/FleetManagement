@@ -6,6 +6,7 @@ const ENV = {
     NODE_ENV: process.env.NODE_ENV,
     DB_URL: process.env.DB_URL,
     FR_ORIGIN: process.env.FR_ORIGIN,
+    PASSWORD_LENGTH: process.env.PASSWORD_LENGTH
 }
 
 export default ENV;

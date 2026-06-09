@@ -4,7 +4,7 @@ import path from "path";
 import cors from "cors";
 // File Imports to be added
 import logger from "./utils/logger";
-import connectDB from "./config/connectDB";
+import { connectDB } from "./config/connectDB";
 
 const app = express();
 const PORT = ENV.PORT;
