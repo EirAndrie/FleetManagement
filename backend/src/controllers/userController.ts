@@ -1,23 +1,28 @@
 import { Request, Response } from "express";
 import { 
     createUserService,
+    deleteUserDataService,
     fetchAllUsersService,
-    fetchUserById,
-    fetchUserByRole,
-    fetchUserBySearch,
-    fetchUserByStatus
+    fetchUserByIdService,
+    fetchUserByRoleService,
+    fetchUserBySearchService,
+    fetchUserByStatusService,
+    updateUserDataService 
 } from "../service/userService";
 import logger from "../utils/logger";
+import { CreateUserDTO, UpdateUserDTO } from "../db/dto/userDTO";
 
 // Controller function to create new user
 export async function createUser(req: Request, res: Response) {
     try {
         const cooperativeId = String(req.params.cooperativeId)
+        const user: CreateUserDTO = req.body;
         
-        const users = await createUserService(req.body, cooperativeId);
+        const users = await createUserService(user, cooperativeId);
         logger.info("User Created Successfully")
         res.status(201).json({
             success: false,
+            message: "User Created Successfully",
             users
         })
     } catch (error: any) {
@@ -63,7 +68,7 @@ export async function getUserById(req: Request, res: Response) {
             });
         }
 
-        const user = await fetchUserById(userId, cooperativeId);
+        const user = await fetchUserByIdService(userId, cooperativeId);
 
         if (!user) {
             return res.status(404).json({
@@ -91,7 +96,7 @@ export async function getUserBySearch(req: Request, res: Response) {
         const cooperativeId = String(req.params.cooperativeId)
         const searchTerm = req.params.searchTerm;
 
-        const user = await fetchUserBySearch(cooperativeId, searchTerm);
+        const user = await fetchUserBySearchService(cooperativeId, searchTerm);
         logger.info(`Found User ${searchTerm} successfully`)
         res.status(201).json({
             success: true,
@@ -113,7 +118,7 @@ export async function getUserByStatus(req: Request, res: Response) {
         const status = String(req.params.status);
         const cooperativeId = String(req.params.cooperativeId)
 
-        const users = await fetchUserByStatus(status, cooperativeId);
+        const users = await fetchUserByStatusService(status, cooperativeId);
         logger.info(`Status: ${status} users found successfully`)
         res.status(200).json({
             success: true,
@@ -135,7 +140,7 @@ export async function getUserByRole(req: Request, res: Response) {
         const role = String(req.params.role);
         const cooperativeId = String(req.params.cooperativeId);
 
-        const users = await fetchUserByRole(role, cooperativeId);
+        const users = await fetchUserByRoleService(role, cooperativeId);
         logger.info(`Status: ${role} users found successfully`)
         res.status(200).json({
             success: true,
@@ -147,6 +152,49 @@ export async function getUserByRole(req: Request, res: Response) {
         res.status(400).json({
             success: false,
             message: `Get User by Role Controller: ${error.message}`
+        })
+    }
+}
+
+// Controller function to update existing user data
+export async function updateUser(req: Request, res: Response) {
+    try {
+        const cooperativeId = String(req.params.cooperativeId);
+        const userId = String(req.params.userId);
+        const updatedUser: UpdateUserDTO = req.body;
+
+        const user = await updateUserDataService(updatedUser, userId, cooperativeId);
+        res.status(201).json({
+            success: true,
+            message: `User ${userId} Updated successfully`,
+            user
+        })
+    } catch(error:any) {
+        logger.error("Failed to update user data")
+        res.status(400).json({
+            success: false,
+            message: `Update User Controller: ${error.message}`
+        })
+    }
+}
+
+// Controller function to delete user
+export async function deleteUser(req: Request, res: Response) {
+    try {
+        const userId = String(req.params.userId);
+        const cooperativeId = String(req.params.cooperativeId);
+
+        const user = await deleteUserDataService(userId, cooperativeId)
+        res.status(201).json({
+            success: true,
+            message: `User: ${userId} Deleted successfully`,
+            user
+        })
+    } catch(error:any) {
+        logger.error("Failed to delete user")
+        res.status(400).json({
+            success: false,
+            message: `Delete User Controller: ${error.message}`
         })
     }
 }
