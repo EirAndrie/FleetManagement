@@ -13,7 +13,7 @@ import { isValidPattern, emailPattern } from "../utils/regexValidator";
 import { validatePasswordLength } from "../utils/validatePassLength";
 // Types for user
 import { NewUsers } from "../db";
-import { CreateUserDTO } from "../db/dto/userDTO";
+import { CreateUserDTO, UpdateUserDTO } from "../db/dto/userDTO";
 import { hashPassword } from "../utils/passwordHasher";
 
 
@@ -25,15 +25,35 @@ export async function createUserService(
     cooperativeId: string
 ) {
     // validation (DTO level)
-    if (!dto.email) throw new Error("Email is required");
-    if (!dto.firstName) throw new Error("First name is required");
-    if (!dto.lastName) throw new Error("Last name is required");
+    if (!dto.email) {
+        logger.info("Email is Required")
+        console.warn("Email is required");
+    }
+
+    if (!dto.firstName) {
+        logger.info("First Name is required")
+        console.warn("First name is required");
+    }
+
+    if (!dto.lastName) {
+        logger.info("Last Name is required");
+        console.warn("Last name is required");
+    }
 
     const validatedEmail = isValidPattern(dto.email, emailPattern);
-    if (!validatedEmail) throw new Error("Invalid email");
+    if (!validatedEmail) {
+        logger.info("Invalid email format")
+        console.warn("Invalid email format");
+    }
 
-    if (!dto.passwordHash || dto.passwordHash.length < 8) {
-        throw new Error("Password must be at least 8 characters");
+    if (!dto.passwordHash) {
+        logger.info("Password is Required")
+        console.warn("Password is Required");
+    }
+
+    if (!validatePasswordLength(dto.passwordHash)) {
+        logger.info("Password must be at least 8 characters long")
+        console.warn("Password must be at least 8 characters long")
     }
 
     // transformation
@@ -72,7 +92,7 @@ export async function fetchAllUsersService(cooperativeId: string) {
 
 
 // Function to fetch user by its ID
-export async function fetchUserById(
+export async function fetchUserByIdService(
     userId: string, 
     cooperativeId: string
 ) {
@@ -90,7 +110,7 @@ export async function fetchUserById(
 
 
 // Function to fetch user by search terms
-export async function fetchUserBySearch(
+export async function fetchUserBySearchService(
     cooperativeId: string, 
     searchTerm: any
 ) {
@@ -107,7 +127,7 @@ export async function fetchUserBySearch(
 
 
 // Function to fetch user by their status
-export async function fetchUserByStatus(
+export async function fetchUserByStatusService(
     status: string,
     cooperativeId: string
 ) {
@@ -115,7 +135,7 @@ export async function fetchUserByStatus(
 
     if (!user) {
         logger.info("User not found")
-        throw new Error("User not found")
+        console.warn("User not found")
     }
 
     return user;
@@ -124,7 +144,7 @@ export async function fetchUserByStatus(
 
 
 // Function to fetch user by their role
-export async function fetchUserByRole(
+export async function fetchUserByRoleService(
     role: string,
     cooperativeId: string
 ) {
@@ -132,7 +152,7 @@ export async function fetchUserByRole(
 
     if (!user) {
         logger.info("User not found")
-        throw new Error("User not found")
+        console.warn("User not found")
     }
 
     return user;
@@ -141,6 +161,34 @@ export async function fetchUserByRole(
 
 
 // Function to update user data
-export async function updateUserData(data: NewUsers) {
+export async function updateUserDataService(
+    data: UpdateUserDTO,
+    userId: string,
+    cooperativeId: string
+) {
+    const user = await updateUser(data, userId, cooperativeId);
 
+    if (!user) {
+        logger.info("User not found");
+        console.warn("User not found");
+    }
+
+    return user;
+}
+
+
+
+// Function to delete user
+export async function deleteUserDataService(
+    userId: string, 
+    cooperativeId: string
+) {
+    const user = await deleteUser(userId, cooperativeId);
+
+    if (!user) {
+        logger.info("User to delete not found")
+        console.warn("User to delete not found")
+    }
+
+    return user;
 }
