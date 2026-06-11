@@ -3,6 +3,7 @@ import {eq, ilike, and, or} from "drizzle-orm";
 import { db } from "../../config/connectDB";
 import { Users } from "../schemas/User";
 import { NewUsers } from "../schemas/User"; // inferred type
+import { UpdateUserDTO } from "../dto/userDTO";
 
 // Query to insert new user to the database
 export async function insertUser(data: NewUsers) {
@@ -77,15 +78,29 @@ export async function getUserByRole(role: string, cooperativeId: string) {
 }
 
 // Query to update data of selected user
-export async function updateUser(data: NewUsers, userId: string) {
+export async function updateUser(
+  user: UpdateUserDTO, 
+  userId: string, 
+  cooperativeId: string
+) {
   return await db.update(Users)
-                  .set(data)
-                  .where(eq(Users.userId, userId))
+                  .set(user)
+                  .where(
+                    and(
+                      eq(Users.userId, userId),
+                      eq(Users.cooperativeId, cooperativeId)
+                    )
+                  )
                   .returning()
 }
 
 // Query to delete user by its ID
-export async function deleteUser(userId: string) {
+export async function deleteUser(userId: string, cooperativeId: string) {
   return await db.delete(Users)
-                  .where(eq(Users.userId, userId));
+                  .where(
+                    and(
+                      eq(Users.userId, userId),
+                      eq(Users.cooperativeId, cooperativeId)
+                    )
+                  )
 }
