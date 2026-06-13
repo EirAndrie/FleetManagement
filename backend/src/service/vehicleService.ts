@@ -11,7 +11,7 @@ import {
 import logger from "../utils/logger";
 import { NewVehicles } from "../db";
 import { CreateVehicleDTO, UpdateVehicleDTO } from "../db/dto/vehicleDTO";
-
+import { Pagination } from "../utils/pagination";
 
 
 // Function to create new vehicle
@@ -85,12 +85,24 @@ export async function createVehicleService(
 
 
 // Function to fetch all vehicles in a cooperative
-export async function fetchAllVehiclesService(cooperativeId: string) {
-    const vehicles = await getVehicles(cooperativeId);
+export async function fetchAllVehiclesService(
+    cooperativeId: string,
+    page: number,
+    limit: number
+) {
+    // Pagination
+    const {
+        offset, 
+        limit: pageSize
+    } = await Pagination(page, limit);
 
+
+    const vehicles = await getVehicles(
+        cooperativeId, pageSize, offset
+    );
     if (vehicles.length === 0) {
         logger.info("No vehicles found");
-        console.warn("No Vehicles found")
+        console.warn("No Vehicles found");
     }
 
     return vehicles
@@ -118,10 +130,20 @@ export async function fetchVehicleByIdService(
 // Function to fetch vehicle by search
 export async function fetchVehicleBySearchService(
     cooperativeId: string,
-    searchTerm: string
+    searchTerm: string,
+    page: number,
+    limit: number
 ) {
-    const vehicle = await getVehicleBySearch(cooperativeId, searchTerm);
+    // Pagination
+    const {
+        offset, 
+        limit: pageSize
+    } = await Pagination(page, limit);
 
+
+    const vehicle = await getVehicleBySearch(
+        cooperativeId, searchTerm, pageSize, offset
+    );
     if (!vehicle) {
         logger.info(`Vehicle ${searchTerm} not found`);
         console.warn(`Vehicle ${searchTerm} not found`);
@@ -138,9 +160,18 @@ export async function fetchVehicleByFilterService(
     make: string,
     model: string,
     year: string,
+    page: number,
+    limit: number
 ) {
-    const vehicle = await getVehicleByFilter(cooperativeId, make, model, year);
+    // Pagination
+    const {
+        offset, 
+        limit: pageSize
+    } = await Pagination(page, limit);
 
+    const vehicle = await getVehicleByFilter(
+        cooperativeId, make, model, year, pageSize, offset
+    );
     if (!vehicle) {
         logger.info(`Vehicle: ${make + " " + model + " " + year} not found`);
         console.warn(`Vehicle: ${make + " " + model + " " + year} not found`)
@@ -154,9 +185,19 @@ export async function fetchVehicleByFilterService(
 // Function to fetch vehicle by their status
 export async function fetchVehicleByStatusService(
     cooperativeId: string,
-    status: string
+    status: string,
+    page: number,
+    limit: number
 ) {
-    const vehicle = await getVehicleByStatus(cooperativeId, status);
+    // Pagination
+    const {
+        offset, 
+        limit: pageSize
+    } = await Pagination(page, limit);
+
+    const vehicle = await getVehicleByStatus(
+        cooperativeId, status, pageSize, offset
+    );
 
     if (!vehicle) {
         logger.info("Vehicle not found");

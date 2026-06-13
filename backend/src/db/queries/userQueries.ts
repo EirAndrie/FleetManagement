@@ -13,10 +13,16 @@ export async function insertUser(data: NewUsers) {
 }
 
 // Query to get all users in a cooperative only not all users in a system
-export async function getUsers(cooperativeId: string) {
+export async function getUsers(
+  cooperativeId: string,
+  limit: number,
+  offset: number
+) {
   return await db.select()
                   .from(Users)
-                  .where(eq(Users.cooperativeId, cooperativeId));
+                  .where(eq(Users.cooperativeId, cooperativeId))
+                  .limit(limit)
+                  .offset(offset);
 }
 
 // Query to fetch user by its ID
@@ -33,7 +39,12 @@ export async function getUserById(userId: string, cooperativeId: string) {
 }
 
 // Query to fetch user by search keywords
-export async function getUserBySearch(cooperativeId: string, query: string) {
+export async function getUserBySearch(
+  cooperativeId: string, 
+  query: string,
+  limit: number,
+  offset: number
+) {
   // Return empty array if no query found
   if (!query) return [];
 
@@ -50,11 +61,18 @@ export async function getUserBySearch(cooperativeId: string, query: string) {
                         ilike(Users.email, searchTerm)
                       )
                     )
-                  );
+                  )
+                  .limit(limit)
+                  .offset(offset);
 }
 
 // Query to fetch user by their status
-export async function getUserByStatus(status: string, cooperativeId: string) {
+export async function getUserByStatus(
+  status: string, 
+  cooperativeId: string,
+  limit: number,
+  offset: number
+) {
   return await db.select()
                   .from(Users)
                   .where(
@@ -62,11 +80,18 @@ export async function getUserByStatus(status: string, cooperativeId: string) {
                       eq(Users.cooperativeId, cooperativeId),
                       eq(Users.status, status)
                     )
-                  );
+                  )
+                  .limit(limit)
+                  .offset(offset);
 }
 
 // Query to fetch user by their role
-export async function getUserByRole(role: string, cooperativeId: string) {
+export async function getUserByRole(
+  role: string, 
+  cooperativeId: string,
+  limit: number,
+  offset: number
+) {
   return await db.select()
                   .from(Users)
                   .where(
@@ -75,6 +100,8 @@ export async function getUserByRole(role: string, cooperativeId: string) {
                       eq(Users.role, role)
                     )
                   )
+                  .limit(limit)
+                  .offset(offset)
 }
 
 // Query to update data of selected user

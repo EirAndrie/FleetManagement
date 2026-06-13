@@ -13,10 +13,16 @@ export async function insertVehicle(data: NewVehicles) {
 }
 
 // Query to fetch all vehicles in a cooperative
-export async function getVehicles(cooperativeId: string) {
+export async function getVehicles(
+    cooperativeId: string,
+    limit: number,
+    offset: number
+) {
     return await db.select()
                     .from(Vehicles)
-                    .where(eq(Vehicles.cooperativeId, cooperativeId));
+                    .where(eq(Vehicles.cooperativeId, cooperativeId))
+                    .limit(limit)
+                    .offset(offset);
 }
 
 // Query to fetch vehicle by its ID
@@ -33,7 +39,12 @@ export async function getVehicleById(cooperativeId: string, vehicleId: string) {
 }
 
 // Query to fetch vehicles by key words
-export async function getVehicleBySearch(cooperativeId: string, query: string) {
+export async function getVehicleBySearch(
+    cooperativeId: string, 
+    query: string,
+    limit: number,
+    offset: number
+) {
     if (!query) return [];
 
     // Format search term to sql like value
@@ -50,7 +61,9 @@ export async function getVehicleBySearch(cooperativeId: string, query: string) {
                                 ilike(Vehicles.model, searchTerm),
                             )
                         )
-                    );
+                    )
+                    .limit(limit)
+                    .offset(offset);
 }
 
 // Query to fetch vehicle by filter make, model, year
@@ -59,6 +72,8 @@ export async function getVehicleByFilter(
     make: string,
     model: string,
     year: string,
+    limit: number,
+    offset: number
 ) {
     return await db.select()
                     .from(Vehicles)
@@ -72,10 +87,17 @@ export async function getVehicleByFilter(
                             )
                         )
                     )
+                    .limit(limit)
+                    .offset(offset);
 }
 
 // Query to fetch vehicle by status
-export async function getVehicleByStatus(cooperativeId: string, status: string) {
+export async function getVehicleByStatus(
+    cooperativeId: string, 
+    status: string,
+    limit: number,
+    offset: number
+) {
     return await db.select()
                     .from(Vehicles)
                     .where(
@@ -84,6 +106,8 @@ export async function getVehicleByStatus(cooperativeId: string, status: string) 
                             eq(Vehicles.status, status)
                         )
                     )
+                    .limit(limit)
+                    .offset(offset);
 }
 
 // Query to update vehilce data

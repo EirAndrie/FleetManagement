@@ -15,7 +15,7 @@ import { validatePasswordLength } from "../utils/validatePassLength";
 import { NewUsers } from "../db";
 import { CreateUserDTO, UpdateUserDTO } from "../db/dto/userDTO";
 import { hashPassword } from "../utils/passwordHasher";
-
+import { Pagination } from "../utils/pagination";
 
 
 
@@ -77,8 +77,20 @@ export async function createUserService(
 
 
 // Function to fetch all users in a cooperative only not all users
-export async function fetchAllUsersService(cooperativeId: string) {
-    const users = await getUsers(cooperativeId);
+export async function fetchAllUsersService(
+    cooperativeId: string,
+    page: number,
+    limit: number
+) {
+    // Pagination
+    const {
+        offset, 
+        limit: pageSize
+    } = await Pagination(page, limit);
+    
+    const users = await getUsers(
+        cooperativeId, pageSize, limit
+    );
 
     if (users.length === 0) {
         logger.info("No Users Found");
@@ -112,9 +124,19 @@ export async function fetchUserByIdService(
 // Function to fetch user by search terms
 export async function fetchUserBySearchService(
     cooperativeId: string, 
-    searchTerm: any
+    searchTerm: any,
+    page: number,
+    limit: number
 ) {
-    const user = await getUserBySearch(cooperativeId, searchTerm);
+    // Pagination
+    const {
+        offset, 
+        limit: pageSize
+    } = await Pagination(page, limit);
+
+    const user = await getUserBySearch(
+        cooperativeId, searchTerm, pageSize, limit
+    );
 
     if (!user) {
         logger.info(`User ${searchTerm} not found`);
@@ -129,9 +151,19 @@ export async function fetchUserBySearchService(
 // Function to fetch user by their status
 export async function fetchUserByStatusService(
     status: string,
-    cooperativeId: string
+    cooperativeId: string,
+    page: number,
+    limit: number
 ) {
-    const user = await getUserByStatus(status, cooperativeId);
+    // Pagination
+    const {
+        offset, 
+        limit: pageSize
+    } = await Pagination(page, limit);
+
+    const user = await getUserByStatus(
+        status, cooperativeId, pageSize, offset
+    );
 
     if (!user) {
         logger.info("User not found")
@@ -146,9 +178,19 @@ export async function fetchUserByStatusService(
 // Function to fetch user by their role
 export async function fetchUserByRoleService(
     role: string,
-    cooperativeId: string
+    cooperativeId: string,
+    page: number,
+    limit: number
 ) {
-    const user = await getUserByRole(role, cooperativeId);
+    // Pagination
+    const {
+        offset, 
+        limit: pageSize
+    } = await Pagination(page, limit);
+    
+    const user = await getUserByRole(
+        role, cooperativeId, pageSize, offset
+    );
 
     if (!user) {
         logger.info("User not found")

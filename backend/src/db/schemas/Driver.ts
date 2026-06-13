@@ -11,7 +11,7 @@ export const Drivers = pgTable("drivers", {
     phoneNumber: text("phone_number").notNull(),
     licenseNumber: text("license_number").notNull().unique(),
     licenseExpiry: timestamp("license_expiry").notNull(),
-    status: text("status").notNull(),
+    status: text("status").notNull().default("Active"),
     
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),

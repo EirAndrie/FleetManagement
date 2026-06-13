@@ -38,9 +38,12 @@ export async function createUser(req: Request, res: Response) {
 export async function getAllUsers(req: Request, res: Response) {
     try {
         // Fetch cooperativeId from parameters
-        const cooperativeId = String(req.params.cooperativeId)
+        const cooperativeId = String(req.params.cooperativeId);
+        // Pagination
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 20;
 
-        const users = await fetchAllUsersService(cooperativeId);
+        const users = await fetchAllUsersService(cooperativeId, page, limit);
         logger.info("All Users Fetched Successfully")
         res.status(200).json({
             success: true,
@@ -83,6 +86,7 @@ export async function getUserById(req: Request, res: Response) {
         });
 
     } catch(error:any) {
+        logger.error("Failed to fetch user")
         res.status(500).json({
             success: false,
             message: `Get User By ID Controller: ${error.message}`
@@ -94,9 +98,15 @@ export async function getUserById(req: Request, res: Response) {
 export async function getUserBySearch(req: Request, res: Response) {
     try {
         const cooperativeId = String(req.params.cooperativeId)
-        const searchTerm = req.params.searchTerm;
+        const searchTerm = String(req.query.searchTerm);
+        // Pagination
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 20;
 
-        const user = await fetchUserBySearchService(cooperativeId, searchTerm);
+
+        const user = await fetchUserBySearchService(
+            cooperativeId, searchTerm, page, limit
+        );
         logger.info(`Found User ${searchTerm} successfully`)
         res.status(201).json({
             success: true,
@@ -115,10 +125,15 @@ export async function getUserBySearch(req: Request, res: Response) {
 // Controller function to fetch user base on status
 export async function getUserByStatus(req: Request, res: Response) {
     try {
-        const status = String(req.params.status);
+        const status = String(req.query.status);
         const cooperativeId = String(req.params.cooperativeId)
+        // Pagination
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 20;
 
-        const users = await fetchUserByStatusService(status, cooperativeId);
+        const users = await fetchUserByStatusService(
+            status, cooperativeId, page, limit
+        );
         logger.info(`Status: ${status} users found successfully`)
         res.status(200).json({
             success: true,
@@ -137,10 +152,15 @@ export async function getUserByStatus(req: Request, res: Response) {
 // Controller function to fetch user base on role
 export async function getUserByRole(req: Request, res: Response) {
     try {
-        const role = String(req.params.role);
+        const role = String(req.query.role);
         const cooperativeId = String(req.params.cooperativeId);
+        // Pagination
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 20;
 
-        const users = await fetchUserByRoleService(role, cooperativeId);
+        const users = await fetchUserByRoleService(
+            role, cooperativeId, page, limit
+        );
         logger.info(`Status: ${role} users found successfully`)
         res.status(200).json({
             success: true,
