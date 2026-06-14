@@ -8,23 +8,53 @@ import {
     updateDriver,
     deleteDriver
 } from "../controllers/driverController";
+import { validateParams } from "../middleware/validateParams";
 
 const router = express.Router();
 
-router.post("/cooperatives/:cooperativeId/drivers", createDriver);
-router.get("/cooperatives/:cooperativeId/drivers", (req, res) => {
-    if (req.query.search) {
-        return getDriverBySearch(req, res);
-    }
+// Create Driver Router
+router.post(
+    "/cooperatives/:cooperativeId/drivers", 
+    validateParams("cooperativeId"),
+    createDriver
+);
 
-    if (req.query.status) {
-        return getDriverByStatus(req, res);
-    }
+// Fetch Drivers Router
+router.get(
+    "/cooperatives/:cooperativeId/drivers", 
+    validateParams("cooperativeId"),
+    (req, res) => {
+        if (req.query.search) {
+            return getDriverBySearch(req, res);
+        }
 
-    return getDrivers(req, res);
-});
-router.get("/cooperatives/:cooperativeId/drivers/:driverId", getDriverById);
-router.patch("/cooperatives/:cooperativeId/drivers/:driverId", updateDriver);
-router.delete("/cooperatives/:cooperativeId/drivers/:driverId", deleteDriver);
+        if (req.query.status) {
+            return getDriverByStatus(req, res);
+        }
+
+        return getDrivers(req, res);
+    }
+);
+
+// Fetch Driver BY ID Router
+router.get(
+    "/cooperatives/:cooperativeId/drivers/:driverId", 
+    validateParams("cooperativeId", "driverId"),
+    getDriverById
+);
+
+// Update Driver Router
+router.patch(
+    "/cooperatives/:cooperativeId/drivers/:driverId", 
+    validateParams("cooperativeId", "driverId"),
+    updateDriver
+);
+
+// Delete Driver Router
+router.delete(
+    "/cooperatives/:cooperativeId/drivers/:driverId", 
+    validateParams("cooperativeId", "driverId"),
+    deleteDriver
+);
 
 export default router;

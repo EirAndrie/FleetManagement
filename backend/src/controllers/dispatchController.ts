@@ -69,7 +69,7 @@ export async function getDispatches(req: Request, res: Response) {
 export async function getDispatchById(req: Request, res: Response) {
     try {
         const cooperativeId = String(req.params.cooperativeId);
-        const dispatchId = String(req.params.id);
+        const dispatchId = String(req.params.dispatchId);
 
         const dispatch = await fetchDispatchByIdService(cooperativeId, dispatchId);
         logger.info("Dispatch fetched successfully");
@@ -115,7 +115,7 @@ export async function getDispatchesByStatus(req: Request, res: Response) {
 export async function getDispatchesByRoute(req: Request, res: Response) {
     try {
         const cooperativeId = String(req.params.cooperativeId);
-        const routeId = String(req.params.id);
+        const routeId = String(req.params.routeId);
         const page = Number(req.query.page) || 1;
         const limit = Number(req.query.limit) || 20;
 
@@ -139,7 +139,7 @@ export async function getDispatchesByRoute(req: Request, res: Response) {
 export async function getDispatchesByDriver(req: Request, res: Response) {
     try {
         const cooperativeId = String(req.params.cooperativeId);
-        const driverId = String(req.params.id);
+        const driverId = String(req.params.driverId);
         const page = Number(req.query.page) || 1;
         const limit = Number(req.query.limit) || 20;
 
@@ -163,7 +163,7 @@ export async function getDispatchesByDriver(req: Request, res: Response) {
 export async function getDispatchesByVehicle(req: Request, res: Response) {
     try {
         const cooperativeId = String(req.params.cooperativeId);
-        const vehicleId = String(req.params.id);
+        const vehicleId = String(req.params.vehilceId);
         const page = Number(req.query.page) || 1;
         const limit = Number(req.query.limit) || 20;
 
@@ -187,7 +187,7 @@ export async function getDispatchesByVehicle(req: Request, res: Response) {
 export async function getDispatchesByUser(req: Request, res: Response) {
     try {
         const cooperativeId = String(req.params.cooperativeId);
-        const userId = String(req.params.id);
+        const userId = String(req.params.userId);
         const page = Number(req.query.page) || 1;
         const limit = Number(req.query.limit) || 20;
 
@@ -235,7 +235,7 @@ export async function getDispatchesByDate(req: Request, res: Response) {
 export async function updateDispatch(req: Request, res: Response) {
     try {
         const cooperativeId = String(req.params.cooperativeId);
-        const dispatchId = String(req.params.id);
+        const dispatchId = String(req.params.dispatchId);
         const data: UpdateDispatchDTO = {
             ...req.body,
             dispatchDate: req.body.dispatchDate ? new Date(req.body.dispatchDate) : undefined,
@@ -263,7 +263,7 @@ export async function updateDispatch(req: Request, res: Response) {
 export async function deleteDispatch(req: Request, res: Response) {
     try {
         const cooperativeId = String(req.params.cooperativeId);
-        const dispatchId = String(req.params.id);
+        const dispatchId = String(req.params.dispatchId);
 
         const dispatch = await deleteDispatchService(cooperativeId, dispatchId);
         logger.info(`Dispatch: ${dispatchId} deleted successfully`);

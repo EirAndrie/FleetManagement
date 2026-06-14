@@ -60,7 +60,7 @@ export async function getQuotas(req: Request, res: Response) {
 export async function getQuotaById(req: Request, res: Response) {
     try {
         const cooperativeId = String(req.params.cooperativeId);
-        const quotaId = String(req.params.id);
+        const quotaId = String(req.params.qoutaId);
 
         const quota = await fetchQuotaByIdService(cooperativeId, quotaId);
         logger.info("Quota fetched successfully")
@@ -107,7 +107,7 @@ export async function getQuotasByRoute(req: Request, res: Response) {
 export async function updateQuota(req: Request, res: Response) {
     try {
         const cooperativeId = String(req.params.cooperativeId);
-        const quotaId = String(req.params.id);
+        const quotaId = String(req.params.quotaId);
         const data: UpdateQuotaDTO = req.body;
 
         const quota = await updateQuotaService(cooperativeId, quotaId, data);
@@ -130,7 +130,7 @@ export async function updateQuota(req: Request, res: Response) {
 export async function deleteQuota(req: Request, res: Response) {
     try {
         const cooperativeId = String(req.params.cooperativeId);
-        const quotaId = String(req.params.id);
+        const quotaId = String(req.params.quotaId);
 
         const quota = await deleteQuotaService(cooperativeId, quotaId);
         logger.info(`Quota: ${quotaId} deleted successfully`);

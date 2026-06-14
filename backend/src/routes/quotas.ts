@@ -7,19 +7,49 @@ import {
     updateQuota,
     deleteQuota
 } from "../controllers/quotaController";
+import { validateParams } from "../middleware/validateParams";
 
 const router = express.Router();
 
-router.post("/cooperatives/:cooperativeId/quotas", createQuota);
-router.get("/cooperatives/:cooperativeId/quotas", (req, res) => {
-    if (req.query.route) {
-        return getQuotasByRoute(req, res);
-    }
+// Create Quota Router
+router.post(
+    "/cooperatives/:cooperativeId/quotas", 
+    validateParams("cooperativeId"),
+    createQuota
+);
 
-    return getQuotas(req, res);
-});
-router.get("/cooperatives/:cooperativeId/quotas/:id", getQuotaById);
-router.patch("/cooperatives/:cooperativeId/quotas/:id", updateQuota);
-router.delete("/cooperatives/:cooperativeId/quotas/:id", deleteQuota);
+// Fetch Qouta Router
+router.get(
+    "/cooperatives/:cooperativeId/quotas", 
+    validateParams("cooperativeId"),
+    (req, res) => {
+        if (req.query.route) {
+            return getQuotasByRoute(req, res);
+        }
+
+        return getQuotas(req, res);
+    }
+);
+
+// Fetch Quota by ID Router
+router.get(
+    "/cooperatives/:cooperativeId/quotas/:quotaId", 
+    validateParams("cooperativeId", "quotaId"),
+    getQuotaById
+);
+
+// Update Quota Router
+router.patch(
+    "/cooperatives/:cooperativeId/quotas/:quotaId", 
+    validateParams("cooperativeId", "quotaId"),
+    updateQuota
+);
+
+// Delete Quota Router
+router.delete(
+    "/cooperatives/:cooperativeId/quotas/:quotaId", 
+    validateParams("cooperativeId", "quotaId"),
+    deleteQuota
+);
 
 export default router;

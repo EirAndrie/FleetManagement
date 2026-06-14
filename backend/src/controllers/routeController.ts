@@ -63,7 +63,7 @@ export async function getRoutes(req: Request, res: Response) {
 export async function getRouteById(req: Request, res: Response) {
     try {
         const cooperativeId = String(req.params.cooperativeId);
-        const routeId = String(req.params.id);
+        const routeId = String(req.params.routeId);
 
         const route = await fetchRouteByIdService(cooperativeId, routeId);
         logger.info("Route fetched successfully")
@@ -185,7 +185,7 @@ export async function getRoutesByCode(req: Request, res: Response) {
 export async function updateRoute(req: Request, res: Response) {
     try {
         const cooperativeId = String(req.params.cooperativeId);
-        const routeId = String(req.params.id);
+        const routeId = String(req.params.routeId);
         const data: UpdateRouteDTO = req.body;
 
         const route = await updateRouteService(cooperativeId, routeId, data);
@@ -208,7 +208,7 @@ export async function updateRoute(req: Request, res: Response) {
 export async function deleteRoute(req: Request, res: Response) {
     try {
         const cooperativeId = String(req.params.cooperativeId);
-        const routeId = String(req.params.id);
+        const routeId = String(req.params.routeId);
 
         const route = await deleteRouteService(cooperativeId, routeId);
         logger.info(`Route: ${routeId} deleted successfully`);

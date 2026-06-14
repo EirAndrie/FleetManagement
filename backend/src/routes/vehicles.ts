@@ -9,27 +9,57 @@ import {
     updateVehicle,
     deleteVehicle
 } from "../controllers/vehicleController";
+import { validateParams } from "../middleware/validateParams";
 
 const router = express.Router();
 
-router.post("/cooperatives/:cooperativeId/vehicles", createVehicle);
-router.get("/cooperatives/:cooperativeId/vehicles", (req, res) => {
-    if (req.query['filter[make]'] || req.query['filter[model]'] || req.query['filter[year]']) {
-        return getVehicleByFilter(req, res);
-    }
+// Create Vehicle Router
+router.post(
+    "/cooperatives/:cooperativeId/vehicles", 
+    validateParams("cooperativeId"),
+    createVehicle
+);
 
-    if (req.query.search) {
-        return getVehicleBySearch(req, res);
-    }
+// Fetch Vehicles Router
+router.get(
+    "/cooperatives/:cooperativeId/vehicles", 
+    validateParams("cooperativeId"),
+    (req, res) => {
+        if (req.query['filter[make]'] || req.query['filter[model]'] || req.query['filter[year]']) {
+            return getVehicleByFilter(req, res);
+        }
 
-    if (req.query.status) {
-        return getVehicleByStatus(req, res);
-    }
+        if (req.query.search) {
+            return getVehicleBySearch(req, res);
+        }
 
-    return getAllVehicles(req, res);
-});
-router.get("/cooperatives/:cooperativeId/vehicles/:vehicleId", getVehicleById);
-router.patch("/cooperatives/:cooperativeId/vehicles/:vehicleId", updateVehicle);
-router.delete("/cooperatives/:cooperativeId/vehicles/:vehicleId", deleteVehicle);
+        if (req.query.status) {
+            return getVehicleByStatus(req, res);
+        }
+
+        return getAllVehicles(req, res);
+    }
+);
+
+// Fetch Vehicle By ID Router
+router.get(
+    "/cooperatives/:cooperativeId/vehicles/:vehicleId", 
+    validateParams("cooperativeId", "vehicleId"),
+    getVehicleById
+);
+
+// Update Vehicle Router
+router.patch(
+    "/cooperatives/:cooperativeId/vehicles/:vehicleId", 
+    validateParams("cooperativeId", "vehicleId"),
+    updateVehicle
+);
+
+// Delete Vehicle Router
+router.delete(
+    "/cooperatives/:cooperativeId/vehicles/:vehicleId", 
+    validateParams("cooperativeId", "vehicleId"),
+    deleteVehicle
+);
 
 export default router;

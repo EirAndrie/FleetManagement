@@ -12,27 +12,81 @@ import {
     updateDispatch,
     deleteDispatch
 } from "../controllers/dispatchController";
+import { validateParams } from "../middleware/validateParams";
 
 const router = express.Router();
 
-router.post("/cooperatives/:cooperativeId/dispatches", createDispatch);
-router.get("/cooperatives/:cooperativeId/dispatches", (req, res) => {
-    if (req.query.status) {
-        return getDispatchesByStatus(req, res);
-    }
+// Create Dispatch Router
+router.post(
+    "/cooperatives/:cooperativeId/dispatches", 
+    validateParams("cooperativeId"),
+    createDispatch
+);
 
-    if (req.query.date) {
-        return getDispatchesByDate(req, res);
-    }
+// Fetch Dispatches Router
+router.get(
+    "/cooperatives/:cooperativeId/dispatches", 
+    validateParams("cooperativeId"),
+    (req, res) => {
+        if (req.query.status) {
+            return getDispatchesByStatus(req, res);
+        }
 
-    return getDispatches(req, res);
-});
-router.get("/cooperatives/:cooperativeId/dispatches/:id", getDispatchById);
-router.get("/cooperatives/:cooperativeId/routes/:id/dispatches", getDispatchesByRoute);
-router.get("/cooperatives/:cooperativeId/drivers/:id/dispatches", getDispatchesByDriver);
-router.get("/cooperatives/:cooperativeId/vehicles/:id/dispatches", getDispatchesByVehicle);
-router.get("/cooperatives/:cooperativeId/users/:id/dispatches", getDispatchesByUser);
-router.patch("/cooperatives/:cooperativeId/dispatches/:id", updateDispatch);
-router.delete("/cooperatives/:cooperativeId/dispatches/:id", deleteDispatch);
+        if (req.query.date) {
+            return getDispatchesByDate(req, res);
+        }
+
+        return getDispatches(req, res);
+    }
+);
+
+// Fetch Dispatch By ID Router
+router.get(
+    "/cooperatives/:cooperativeId/dispatches/:dispatchId", 
+    validateParams("cooperativeId", "dispatchId"),
+    getDispatchById
+);
+
+// Fetch Dispatches by Routes Router
+router.get(
+    "/cooperatives/:cooperativeId/routes/:routeId/dispatches", 
+    validateParams(),
+    getDispatchesByRoute
+);
+
+// Fetch Dispatches By Driver Router
+router.get(
+    "/cooperatives/:cooperativeId/drivers/:driverId/dispatches", 
+    validateParams("cooperativeId", "driverId"),
+    getDispatchesByDriver
+);
+
+// Fetch Dispatches By Vehicle Router
+router.get(
+    "/cooperatives/:cooperativeId/vehicles/:vehicleId/dispatches", 
+    validateParams("cooperativeId", "vehicleId"),
+    getDispatchesByVehicle
+);
+
+// Fetch Dispatches By Users Who Performs Dispatch Router
+router.get(
+    "/cooperatives/:cooperativeId/users/:id/dispatches", 
+    validateParams("cooperativeId", "userId"),
+    getDispatchesByUser
+);
+
+// Update Dispatch Router
+router.patch(
+    "/cooperatives/:cooperativeId/dispatches/:dispatchId", 
+    validateParams("cooperativeId", "dispatchId"),
+    updateDispatch
+);
+
+// Delete Dispatch Router
+router.delete(
+    "/cooperatives/:cooperativeId/dispatches/:dispatchId", 
+    validateParams("cooperativeId", "dispatchId"),
+    deleteDispatch
+);
 
 export default router;

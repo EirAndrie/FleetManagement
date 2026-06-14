@@ -10,31 +10,61 @@ import {
     updateRoute,
     deleteRoute
 } from "../controllers/routeController";
+import { validateParams } from "../middleware/validateParams";
 
 const router = express.Router();
 
-router.post("/cooperatives/:cooperativeId/routes", createRoute);
-router.get("/cooperatives/:cooperativeId/routes", (req, res) => {
-    if (req.query.search) {
-        return getRouteBySearch(req, res);
-    }
+// Create Route Router
+router.post(
+    "/cooperatives/:cooperativeId/routes", 
+    validateParams("cooperativeId"),
+    createRoute
+);
 
-    if (req.query.distance) {
-        return getRoutesByDistance(req, res);
-    }
+// Get Routes Router
+router.get(
+    "/cooperatives/:cooperativeId/routes", 
+    validateParams("cooperativeId"),
+    (req, res) => {
+        if (req.query.search) {
+            return getRouteBySearch(req, res);
+        }
 
-    if (req.query.status) {
-        return getRoutesByStatus(req, res);
-    }
+        if (req.query.distance) {
+            return getRoutesByDistance(req, res);
+        }
 
-    if (req.query.code) {
-        return getRoutesByCode(req, res);
-    }
+        if (req.query.status) {
+            return getRoutesByStatus(req, res);
+        }
 
-    return getRoutes(req, res);
-});
-router.get("/cooperatives/:cooperativeId/routes/:id", getRouteById);
-router.patch("/cooperatives/:cooperativeId/routes/:id", updateRoute);
-router.delete("/cooperatives/:cooperativeId/routes/:id", deleteRoute);
+        if (req.query.code) {
+            return getRoutesByCode(req, res);
+        }
+
+        return getRoutes(req, res);
+    }
+);
+
+// Get Route by ID Router
+router.get(
+    "/cooperatives/:cooperativeId/routes/:routeId", 
+    validateParams("cooperativeId", "routeId"),
+    getRouteById
+);
+
+// Update Route Router
+router.patch(
+    "/cooperatives/:cooperativeId/routes/:routeId", 
+    validateParams("cooperativeId", "routeId"),
+    updateRoute
+);
+
+// Delete Route Router
+router.delete(
+    "/cooperatives/:cooperativeId/routes/:routeId", 
+    validateParams("cooperativeId", "routeId"),
+    deleteRoute
+);
 
 export default router;
