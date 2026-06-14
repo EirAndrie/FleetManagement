@@ -62,7 +62,7 @@ export async function getAllUsers(req: Request, res: Response) {
 export async function getUserById(req: Request, res: Response) {
     try {
         const userId = String(req.params.userId);
-        const cooperativeId = String(req.params.cooperativeID)
+        const cooperativeId = String(req.params.cooperativeId)
 
         if (!userId || !cooperativeId) {
             return res.status(400).json({
@@ -98,7 +98,7 @@ export async function getUserById(req: Request, res: Response) {
 export async function getUserBySearch(req: Request, res: Response) {
     try {
         const cooperativeId = String(req.params.cooperativeId)
-        const searchTerm = String(req.query.searchTerm);
+        const searchTerm = String(req.query.search || "");
         // Pagination
         const page = Number(req.query.page) || 1;
         const limit = Number(req.query.limit) || 20;

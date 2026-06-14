@@ -2,7 +2,7 @@ import ENV from "./config/env";
 import express from "express";
 import path from "path";
 import cors from "cors";
-// File Imports to be added
+import apiRoutes from "./routes";
 import logger from "./utils/logger";
 import { connectDB } from "./config/connectDB";
 
@@ -47,7 +47,8 @@ if (!isProduction) {
   logger.info(`CORS: ${ENV.FR_ORIGIN} Running in Production Mode`);
 }
 
-// ROUTES SECTION: To be Added
+// ROUTES SECTION
+app.use("/", apiRoutes);
 
 // Check if project runs on production or development
 if (isProduction) {

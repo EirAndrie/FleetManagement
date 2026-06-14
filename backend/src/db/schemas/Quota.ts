@@ -1,5 +1,6 @@
 import {pgTable, uuid, text, timestamp, integer} from 'drizzle-orm/pg-core';
 import {Routes} from './DispatchRoutes';
+import { Cooperatives } from './Cooperative';
 
 export const Quotas = pgTable("quotas", {
     quotaId: uuid("quota_id").primaryKey().defaultRandom(),
@@ -10,6 +11,8 @@ export const Quotas = pgTable("quotas", {
     
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
+
+    cooperativeId: uuid("cooperative_id").references(() => Cooperatives.cooperativeId).notNull() // FK
 })
 
 // Types export

@@ -111,9 +111,9 @@ export async function getVehicleBySearch(req: Request, res: Response) {
 export async function getVehicleByFilter(req: Request, res: Response) {
     try {
         const cooperativeId = String(req.params.cooperativeId);
-        const make = String(req.query.filter);
-        const model = String(req.query.filter);
-        const year = String(req.query.filter);
+        const make = String(req.query['filter[make]'] || "");
+        const model = String(req.query['filter[model]'] || "");
+        const year = String(req.query['filter[year]'] || "");
         // Pagination
         const page = Number(req.query.page) || 1;
         const limit = Number(req.query.limit) || 10;

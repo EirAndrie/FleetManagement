@@ -24,6 +24,10 @@ export async function createUserService(
     dto: CreateUserDTO,
     cooperativeId: string
 ) {
+    if (!cooperativeId) {
+        throw new Error("Missing cooperative ID")
+    }
+
     // validation (DTO level)
     if (!dto.email) {
         logger.info("Email is Required")
@@ -82,6 +86,10 @@ export async function fetchAllUsersService(
     page: number,
     limit: number
 ) {
+    if (!cooperativeId) {
+        throw new Error("Missing cooperative ID")
+    }
+
     // Pagination
     const {
         offset, 
@@ -89,7 +97,7 @@ export async function fetchAllUsersService(
     } = await Pagination(page, limit);
     
     const users = await getUsers(
-        cooperativeId, pageSize, limit
+        cooperativeId, pageSize, offset
     );
 
     if (users.length === 0) {
@@ -108,6 +116,10 @@ export async function fetchUserByIdService(
     userId: string, 
     cooperativeId: string
 ) {
+    if (!cooperativeId || !userId) {
+        throw new Error("Missing required IDs")
+    }
+    
     const user = await getUserById(userId, cooperativeId);
 
     if (!user) {
@@ -128,6 +140,10 @@ export async function fetchUserBySearchService(
     page: number,
     limit: number
 ) {
+    if (!cooperativeId) {
+        throw new Error("Missing cooperative ID")
+    }
+
     // Pagination
     const {
         offset, 
@@ -135,7 +151,7 @@ export async function fetchUserBySearchService(
     } = await Pagination(page, limit);
 
     const user = await getUserBySearch(
-        cooperativeId, searchTerm, pageSize, limit
+        cooperativeId, searchTerm, pageSize, offset
     );
 
     if (!user) {
@@ -155,6 +171,10 @@ export async function fetchUserByStatusService(
     page: number,
     limit: number
 ) {
+    if (!cooperativeId) {
+        throw new Error("Missing cooperative ID")
+    }
+
     // Pagination
     const {
         offset, 
@@ -182,6 +202,10 @@ export async function fetchUserByRoleService(
     page: number,
     limit: number
 ) {
+    if (!cooperativeId) {
+        throw new Error("Missing cooperative ID")
+    }
+
     // Pagination
     const {
         offset, 
@@ -208,11 +232,15 @@ export async function updateUserDataService(
     userId: string,
     cooperativeId: string
 ) {
+    if (!cooperativeId || !userId) {
+        throw new Error("Missing required IDs")
+    }
+
     const user = await updateUser(data, userId, cooperativeId);
 
     if (!user) {
-        logger.info("User not found");
-        console.warn("User not found");
+        logger.info(`User: ${userId} not found`);
+        console.warn(`User: ${userId} not found`);
     }
 
     return user;
@@ -225,11 +253,15 @@ export async function deleteUserDataService(
     userId: string, 
     cooperativeId: string
 ) {
+    if (!cooperativeId || !userId) {
+        throw new Error("Missing required IDs")
+    }
+    
     const user = await deleteUser(userId, cooperativeId);
 
     if (!user) {
-        logger.info("User to delete not found")
-        console.warn("User to delete not found")
+        logger.info(`User to delete: ${userId} not found`)
+        console.warn(`User to delete: ${userId} not found`)
     }
 
     return user;

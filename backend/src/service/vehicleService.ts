@@ -19,6 +19,10 @@ export async function createVehicleService(
     dto: CreateVehicleDTO,
     cooperativeId: string
 ) {
+    if (!cooperativeId) {
+        throw new Error("Missing cooperative ID")
+    }
+
     // Validation later (DTO level)
     if (!dto.plateNumber) {
         logger.info("Plate number is required")
@@ -90,6 +94,10 @@ export async function fetchAllVehiclesService(
     page: number,
     limit: number
 ) {
+    if (!cooperativeId) {
+        throw new Error("Missing cooperative ID")
+    }
+
     // Pagination
     const {
         offset, 
@@ -115,6 +123,10 @@ export async function fetchVehicleByIdService(
     vehicleId: string,
     cooperativeId: string
 ) {
+    if (!vehicleId || cooperativeId) {
+        throw new Error("Missing required IDs")
+    }
+
     const vehicle = await getVehicleById(vehicleId, cooperativeId);
 
     if (!vehicle) {
@@ -134,6 +146,10 @@ export async function fetchVehicleBySearchService(
     page: number,
     limit: number
 ) {
+    if (!cooperativeId) {
+        throw new Error("Missing cooperative ID")
+    }
+
     // Pagination
     const {
         offset, 
@@ -163,6 +179,10 @@ export async function fetchVehicleByFilterService(
     page: number,
     limit: number
 ) {
+    if (!cooperativeId) {
+        throw new Error("Missing cooperative ID")
+    }
+
     // Pagination
     const {
         offset, 
@@ -189,6 +209,10 @@ export async function fetchVehicleByStatusService(
     page: number,
     limit: number
 ) {
+    if (!cooperativeId) {
+        throw new Error("Missing cooperative ID")
+    }
+
     // Pagination
     const {
         offset, 
@@ -213,6 +237,10 @@ export async function updateVehicleService(
     vehicleId: string,
     cooperativeId: string
 ) {
+    if (!cooperativeId || !vehicleId) {
+        throw new Error("Missing required IDs")
+    }
+
     const vehicle = await updateVehicleData(vehicleData, vehicleId, cooperativeId);
 
     if (!vehicle) {
@@ -228,6 +256,10 @@ export async function deleteVehicleService(
     vehicleId: string,
     cooperativeId: string
 ) {
+    if (!cooperativeId || !vehicleId) {
+        throw new Error("Missing required IDs")
+    }
+
     const vehicle = await deleteVehicle(vehicleId, cooperativeId);
 
     if (!vehicle) {

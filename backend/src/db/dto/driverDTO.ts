@@ -7,7 +7,7 @@ export type CreateDriverDTO = {
 
     phoneNumber: string;
     licenseNumber: string;
-    licenseExpiry: string;
+    licenseExpiry: Date;
     status: string
 }
 

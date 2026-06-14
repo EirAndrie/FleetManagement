@@ -7,12 +7,10 @@ import { UpdateDriverDTO } from "../dto/driverDTO";
 
 // Query to insert new driver to the database
 export async function insertDriver(
-    cooperativeId: string,
     driver: NewDrivers
 ) {
-    const driverWithCoop = { ...driver, cooperativeId } as NewDrivers & { cooperativeId: string };
     return await db.insert(Drivers)
-                    .values(driverWithCoop)
+                    .values(driver)
                     .returning();
 }
 

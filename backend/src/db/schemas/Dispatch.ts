@@ -3,6 +3,7 @@ import {Vehicles} from './Vehicle';
 import {Drivers} from './Driver';
 import {Users} from './User';
 import { Routes } from './DispatchRoutes';
+import { Cooperatives } from './Cooperative';
 
 export const Dispatches = pgTable("dispatches", {
     dispatchId: uuid("dispatch_id").primaryKey().defaultRandom(),
@@ -26,6 +27,8 @@ export const Dispatches = pgTable("dispatches", {
 
     // Foreign Key to User (who created the dispatch)
     createdBy: uuid("created_by").references(() => Users.userId).notNull(),
+
+    cooperativeId: uuid("cooperative_id").references(() => Cooperatives.cooperativeId).notNull(),
 })
 
 // Type exports
